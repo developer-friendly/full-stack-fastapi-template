@@ -30,8 +30,6 @@ jobs:
       db:
         image: postgres:12
         env:
-          POSTGRES_SERVER: localhost
-          POSTGRES_PORT: 5432
           POSTGRES_DB: app
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: changethis
@@ -52,7 +50,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -U pip 'pytest<9' 'coverage<8' .
-      - name: Set up environment
+      - name: Set up migration
         run: alembic upgrade head
       - name: Run tests
         run: |
