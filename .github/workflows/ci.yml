@@ -1,0 +1,58 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      pages: write
+    services:
+      db:
+        image: postgres:12
+        env:
+          POSTGRES_SERVER: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_DB: app
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: changethis
+        ports:
+          - 5432:5432
+        volumes:
+          - /var/lib/postgresql/data/pgdata
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install dependencies
+        run: |
+          pip install -U pip 'pytest<9' 'coverage<8' .
+      - name: Set up environment
+        run: cat ../.env >> $GITHUB_ENV
+      - name: Run migrations
+        run: alembic upgrade head
+      - name: Run tests
+        run: |
+          coverage run --source=app -m pytest
+          coverage report --show-missing
+          coverage html
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: coverage-html
+          path: backend/htmlcov
