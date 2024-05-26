@@ -13,7 +13,7 @@ env:
   PROJECT_NAME: github-actions-integration-testing
   FIRST_SUPERUSER: admin@example.com
   FIRST_SUPERUSER_PASSWORD: changethis
-  POSTGRES_SERVER: db
+  POSTGRES_SERVER: localhost
   POSTGRES_PORT: 5432
   POSTGRES_DB: app
   POSTGRES_USER: postgres
