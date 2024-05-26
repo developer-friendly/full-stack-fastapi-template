@@ -9,6 +9,16 @@ on:
       - opened
       - synchronize
 
+env:
+  PROJECT_NAME: github-actions-integration-testing
+  FIRST_SUPERUSER: admin@example.com
+  FIRST_SUPERUSER_PASSWORD: changethis
+  POSTGRES_SERVER: localhost
+  POSTGRES_PORT: 5432
+  POSTGRES_DB: app
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: changethis
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -43,8 +53,6 @@ jobs:
         run: |
           pip install -U pip 'pytest<9' 'coverage<8' .
       - name: Set up environment
-        run: cat ../.env >> $GITHUB_ENV
-      - name: Run migrations
         run: alembic upgrade head
       - name: Run tests
         run: |
