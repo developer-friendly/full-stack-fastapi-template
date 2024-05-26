@@ -20,6 +20,19 @@ env:
   POSTGRES_PASSWORD: changethis
 
 jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    services:
+      nginx:
+        image: nginx
+        ports:
+          - 8080:80
+    steps:
+      - name: Healthcheck
+        run: curl -D - http://localhost:8080
+
   test:
     runs-on: ubuntu-latest
     permissions:
