@@ -63,15 +63,14 @@ jobs:
         with:
           python-version: "3.x"
       - name: Install dependencies
-        run: |
-          pip install -U pip 'pytest<9' 'coverage<8' .
+        run: poetry install
       - name: Set up migration
         run: alembic upgrade head
       - name: Run tests
         run: |
-          coverage run --source=app -m pytest
-          coverage report --show-missing
-          coverage html
+          poetry run coverage run --source=app -m pytest
+          poetry run coverage report --show-missing
+          poetry run coverage html
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
