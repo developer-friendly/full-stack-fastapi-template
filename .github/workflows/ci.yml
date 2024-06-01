@@ -49,9 +49,9 @@ jobs:
       db:
         image: postgres:16
         env:
-          POSTGRES_DB: app
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: changethis
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
         ports:
           - 5432:5432
         options: --health-cmd "pg_isready -h localhost" --health-interval 10s --health-timeout 5s --health-retries 5
@@ -82,8 +82,8 @@ jobs:
         with:
           name: coverage-html
           path: backend/htmlcov
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
           artifact_name: coverage-html
