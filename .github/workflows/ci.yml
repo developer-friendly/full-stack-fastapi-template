@@ -63,7 +63,9 @@ jobs:
         with:
           python-version: "3.x"
       - name: Install dependencies
-        run: poetry install
+        run: |
+          pip install -U pip poetry
+          poetry install
       - name: Set up migration
         run: alembic upgrade head
       - name: Run tests
